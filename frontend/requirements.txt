@@ -1,0 +1,12 @@
+# Frontend dependencies are managed via package.json
+# This file exists for documentation purposes
+
+# Key dependencies:
+# - react: ^18.2.0
+# - react-dom: ^18.2.0
+# - next: 14.0.4
+# - better-auth: ^0.1.1
+# - axios: ^1.6.2
+# - zustand: ^4.4.7
+# - clsx: ^2.0.0
+# - tailwind-merge: ^2.1.0
