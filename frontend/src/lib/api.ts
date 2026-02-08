@@ -32,12 +32,22 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    console.error('API Error:', error); // Log all API errors for debugging
+
     // Handle specific error cases
     if (error.response?.status === 401) {
+      console.warn('Authentication failed - clearing token and redirecting to login');
       // Redirect to login or clear auth state
       localStorage.removeItem('better-auth-token');
+      localStorage.removeItem('better-auth-user');
+      window.location.href = '/login';
+    } else if (error.response?.status === 403) {
+      console.warn('Forbidden access - clearing token and redirecting to login');
+      localStorage.removeItem('better-auth-token');
+      localStorage.removeItem('better-auth-user');
       window.location.href = '/login';
     }
+
     return Promise.reject(error);
   }
 );

@@ -125,15 +125,26 @@ export default function DashboardWrapper() {
     const fetchTasks = async () => {
       try {
         setLoading(true);
+        console.log('Attempting to fetch tasks with userId:', userId);
+
         // Using the new API endpoint structure
         const response = await api.get(`/api/v1/tasks`);
+        console.log('Tasks fetched successfully:', response.data);
         setTasks(response.data);
       } catch (error: any) {
         console.error('Error fetching tasks:', error);
+        console.error('Error details:', {
+          status: error.response?.status,
+          statusText: error.response?.statusText,
+          data: error.response?.data,
+          url: error.request?.responseURL
+        });
+
         toast.error('Failed to load tasks');
 
         // Check if it's an authentication error
         if (error.response?.status === 401 || error.response?.status === 403) {
+          console.warn('Authentication error - redirecting to login');
           // Redirect to login if unauthorized
           router.push('/login');
         }
@@ -217,9 +228,12 @@ export default function DashboardWrapper() {
     }
 
     try {
+      console.log('Attempting to save task with userId:', userId, 'and taskData:', taskData);
+
       if (editingTask) {
         // Update existing task
         const response = await api.patch(`/api/v1/tasks/${editingTask.id}`, taskData);
+        console.log('Task updated successfully:', response.data);
         setTasks(tasks.map(task =>
           task.id === editingTask.id ? response.data : task
         ));
@@ -227,12 +241,20 @@ export default function DashboardWrapper() {
       } else {
         // Add new task - include user_id in the request
         const response = await api.post(`/api/v1/tasks`, { ...taskData, user_id: userId });
+        console.log('Task added successfully:', response.data);
         setTasks([...tasks, response.data]);
         toast.success('Task added successfully');
       }
       setIsModalOpen(false);
     } catch (error: any) {
       console.error('Error saving task:', error);
+      console.error('Error details:', {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        url: error.request?.responseURL
+      });
+
       toast.error(editingTask ? 'Failed to update task' : 'Failed to add task');
 
       // Check if it's an authentication error
