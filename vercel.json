@@ -1,6 +1,6 @@
 {
  
-  "outputDirectory": "frontend/.next",
+  "outputDirectory": ".next",
   
  
   "framework": "nextjs",
